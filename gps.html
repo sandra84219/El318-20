@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button id="gps">Try It</button>
+<p id="datos"></p>
+<script>
+var datos = document.getElementById("datos");
+document.getElementById("gps").onclick = function(){
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(mostrarPosicion);
+  } else { 
+    datos.innerHTML = "No hay GPS";
+  }
+};
+
+function mostrarPosicion(position) {
+  datos.innerHTML = "Latitud: " + position.coords.latitude + 
+  "<br>Longitud: " + position.coords.longitude;
+}
+</script>
+
+</body>
+</html>
