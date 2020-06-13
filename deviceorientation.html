@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <table>
+    <tr>
+      <td>Izquierda/Derecha [gama]</td>
+      <td id="gama"></td>
+    </tr>
+    <tr>
+      <td>Arriba/Abajo [beta]</td>
+      <td id="beta"></td>
+    </tr>
+    <tr>
+      <td>Dirección [alpha]</td>
+      <td id="alfa"></td>
+    </tr>
+  </table>
+  <script>
+if ('DeviceOrientationEvent' in window) {
+  window.addEventListener('deviceorientation', deviceOrientationHandler, false);
+} else {
+  alert("No soporta orientación");
+}
+
+function deviceOrientationHandler (eventData) {
+  document.getElementById("gama").innerHTML = eventData.gamma;
+  document.getElementById("beta").innerHTML = eventData.beta;
+  document.getElementById("alfa").innerHTML = eventData.alpha;
+}   
+  </script>
+</body>
+</html>
