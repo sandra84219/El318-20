@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ejemplo 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+<body>
+<canvas id="myCanvas" width="800" height="600" style="border:1px solid #d3d3d3;"></canvas>
+
+<script>
+var r = 10;
+var vx = 5;
+var vy = 5;
+var hIzq = 150;
+var hDer = 150;
+var alto = 100;
+var ancho = 12;
+var x = 50;
+var y = 50;
+var idIzq = -1;
+var idDer = -1;
+
+var canva = document.getElementById("myCanvas");
+var ctx = canva.getContext("2d");
+  
+canva.addEventListener('touchend',finTouch);
+canva.addEventListener('touchmove',moverTouch);
+canva.addEventListener('touchstart',inicioTouch);
+
+function pintar(){
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect (0,0,canva.width,canva.height);
+    ctx.fillStyle = "#000000";
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,2*Math.PI);
+    ctx.stroke();
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect (0,(hIzq-alto/2),ancho,alto);
+    ctx.fillRect (canva.width-ancho,(hDer-alto/2),ancho,alto);
+
+}
+function mover(){
+     x = x+vx;
+    y = y+vy;
+    if (y+r>=canva.height){
+        vy *= -1;
+        y = -y+2*(canva.height -r);
+    } else if(y-r<=0){
+        vy *= -1;
+        y += r-y;
+    }
+    
+    if(x <= r+ancho){
+        if((y < hIzq - alto/2)||(y > hIzq + alto/2)){
+            x = canva.width-ancho-r;
+            y = hDer;
+        }else{
+            vx *= -1;
+            x += r-x+ancho;
+        }
+    }
+    else if(x >= canva.width - ancho - r){
+        if((y < hDer - alto/2)||(y > hDer + alto/2)){
+            x = ancho + r;
+            y = hIzq;
+        }else{
+            vx *= -1;
+            x = 2*(canva.width-r-ancho)-x;
+        }
+    }
+}
+setInterval (function(){
+  mover();
+  pintar();
+},50);
+
+
+
+function moverTouch(event) {
+    var i;
+    var lng = event.touches.length;
+    for(i = 0;  i < lng ; i++){
+        if(event.touches[i].identifier == idDer){
+            hDer = event.touches[i].clientY;
+            break;
+        }
+    }
+    
+    for(i = 0;  i < lng ; i++){
+        if(event.touches[i].identifier == idIzq){
+            hIzq = event.touches[i].clientY;
+            break;
+        }
+    }
+    
+    
+}
+
+function inicioTouch(event){
+    var i;
+    var lng = event.touches.length;
+    var limIzq = canva.width * 0.2;
+    var limDer = canva.width * 0.8;
+    if(idIzq === -1){
+        for(i = 0 ; i < lng ; i++){
+            if(event.touches[i].clientX <= limIzq){
+                idIzq = event.touches[i].identifier;
+                hIzq = event.touches[i].clientY;
+                break;
+            }
+        } 
+    }
+    
+    if(idDer === -1){
+        for(i = 0; i < lng ; i++ ){
+            if(event.touches[i].clientX >= limDer){
+                idDer = event.touches[i].identifier;
+                hDer = event.touches[i].clientY;
+                break;
+            }
+        }
+    }
+}
+
+function finTouch(event){
+    var i;
+    var lng = event.touches.length;
+    for(i = 0;  i < lng ; i++){
+        if(event.touches[i].identifier == idDer){
+            break;
+        }
+    }
+    if(i == lng){
+        idDer = -1;
+    }
+    
+    for(i = 0;  i < lng ; i++){
+        if(event.touches[i].identifier == idIzq){
+            break;
+        }
+    }
+    if(i == lng){
+        idIzq = -1;
+    }
+    
+}
+
+</script>
+
+</body>
+</html>
