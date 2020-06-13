@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movimiento</title>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        #bola {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: red;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+    </style>
+</head>
+<body>
+<div id="bola"></div>
+<button id="iniciar">Iniciar</button>
+<script>
+var x = 0;
+var y = 0;
+var vx = 0;
+var vy = 0;
+var ax = 0;
+var ay = 0;
+var dt = 0.01;
+var roce = 0.1;
+var bola = document.getElementById("bola");
+if (window.DeviceMotionEvent == "undefined"){
+    alert("No tiene DeviceMotion");
+}
+document.getElementById("iniciar").onclick = function(){
+    if (typeof(DeviceMotionEvent.requestPermission ) === "function"){
+        DeviceMotionEvent.requestPermission()
+        .then( response => {
+            if ( response == "granted" ) {
+                activarMovimiento();
+            } else {
+                alert(response);
+            }
+        });  
+    } else {
+        activarMovimiento();
+    }
+};
+setInterval(function(){
+    var ancho = window.innerWidth;
+    var alto = window.innerHeight;
+    x += vx*dt + 0.5*ax*dt*dt;
+    y += vy*dt + 0.5*ay*dt*dt;
+    vx += ax*dt;
+    vy += ay*dt;
+
+    if (x<0){
+        x = -x ;
+        vx = -vx;
+    } else if (x+20 > ancho){
+        x = -40 -x + 2*ancho;
+        vx = -vx;
+    }
+    if (y<0){
+        y = -y;
+        vy = -vy;
+    } else if (y+20 > alto){
+        y = -40 -y + 2*alto;
+        vy = -vy;
+    }
+
+    bola.style.left = x + "px";
+    bola.style.top = y + "px";
+},dt*1000);
+function activarMovimiento(){
+    window.addEventListener( "devicemotion", (evento) => {
+        //fuerza gravedad
+        ax = -evento.accelerationIncludingGravity.x*10;
+        ay = evento.accelerationIncludingGravity.y*10;
+
+        //fuerza roce
+        ax -= vx * roce;
+        ay -= vy * roce;
+    });
+    document.getElementById("iniciar").style.display = "none";
+}
+</script>
+</body>
+</html>
