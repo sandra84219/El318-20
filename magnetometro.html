@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<p id="x"></p>
+<p id="y"></p>
+<p id="z"></p>
+<script>
+var elemx = document.getElementById("x");
+var elemy = document.getElementById("y");
+var elemz = document.getElementById("z");
+if (window.Magnetometer){
+  var magSensor = new Magnetometer({frequency: 60});
+  magSensor.addEventListener('reading', function(e){
+    elemx.innerHTML = "X: " + magSensor.x;
+    elemy.innerHTML = "Y: " + magSensor.y;
+    elemz.innerHTML = "Z: " + magSensor.z;
+  });
+  magSensor.start();
+} else {
+  alert("No tiene magnetometro");
+}
+</script>
+
+</body>
+</html>
